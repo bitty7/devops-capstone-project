@@ -111,14 +111,12 @@ class TestAccountService(TestCase):
         self.assertEqual(new_account["phone_number"], account.phone_number)
         self.assertEqual(new_account["date_joined"], str(account.date_joined))
 
-    
     def test_account_not_found(self):
         """It should return HTTP_404_NOT_FOUND when Read Account not found"""
         response = self.client.get(
             f"{BASE_URL}/0", content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
 
     def test_bad_request(self):
         """It should not Create an Account when sending the wrong data"""
@@ -156,13 +154,6 @@ class TestAccountService(TestCase):
         data = response.get_json()
         self.assertEqual(data["name"], account.name)
 
-    def test_account_not_found(self):
-        """It should return HTTP_404_NOT_FOUND when Read Account not found"""
-        response = self.client.get(
-            f"{BASE_URL}/0", content_type="application/json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
     def test_update_account(self):
         """It should Update an existing Account"""
         new_account = self._create_accounts(1)[0]
@@ -198,8 +189,6 @@ class TestAccountService(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
-
     def test_update_account_unsupported_media_type(self):
         """It should not Update an Account when sending the wrong media type"""
         account = self._create_accounts(1)[0]
@@ -209,8 +198,6 @@ class TestAccountService(TestCase):
             content_type="test/html"
         )
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-
 
     def test_delete_account(self):
         """It should Delete an Account"""
@@ -230,12 +217,10 @@ class TestAccountService(TestCase):
         accounts = list_response.get_json()
         self.assertEqual(len(accounts), 1)
 
-
     def test_method_not_allowed(self):
         """It should not allow an illegal method call"""
         response = self.client.delete(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
 
     def test_security_headers(self):
         """It should return response with Security headers"""
@@ -250,7 +235,6 @@ class TestAccountService(TestCase):
         }
         for key, value in headers.items():
             self.assertEqual(response.headers.get(key), value)
-
 
     def test_cors_security(self):
         """It should return CORS header"""
