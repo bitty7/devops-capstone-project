@@ -85,13 +85,6 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, 200)
         data = resp.get_json()
         self.assertEqual(data["status"], "OK")
-    
-    def test_account_not_found(self):
-        """It should return HTTP_404_NOT_FOUND when Read Account not found"""
-        response = self.client.get(
-            f"{BASE_URL}/0", content_type="application/json"
-        )
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_create_account(self):
         """It should Create a new Account"""
@@ -114,6 +107,15 @@ class TestAccountService(TestCase):
         self.assertEqual(new_account["address"], account.address)
         self.assertEqual(new_account["phone_number"], account.phone_number)
         self.assertEqual(new_account["date_joined"], str(account.date_joined))
+
+    
+    def test_account_not_found(self):
+        """It should return HTTP_404_NOT_FOUND when Read Account not found"""
+        response = self.client.get(
+            f"{BASE_URL}/0", content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
 
     def test_bad_request(self):
         """It should not Create an Account when sending the wrong data"""
@@ -140,5 +142,22 @@ class TestAccountService(TestCase):
 
         data = response.get_json()
         self.assertEqual(len(data), 5)
+
+    def test_read_an_account(self):
+        """It should read single Account"""
+        account = self._create_accounts(1)[0]
+        response = self.client.get(
+            f"{BASE_URL}/{account.id}", content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], account.name)
+
+    def test_account_not_found(self):
+        """It should return HTTP_404_NOT_FOUND when Read Account not found"""
+        response = self.client.get(
+            f"{BASE_URL}/0", content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     # ADD YOUR TEST CASES HERE ...
